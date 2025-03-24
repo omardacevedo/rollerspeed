@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos - RollerSpeed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>🎉 Eventos</h1>
+    <p>En RollerSpeed, nos encanta fomentar la comunidad del patinaje con eventos especiales que motivan a nuestros estudiantes y promueven el deporte:</p>
+    <ul class="list-unstyled">
+        <li><strong>📆 Roller Fest:</strong> Un festival anual donde patinadores de todas las edades pueden disfrutar de exhibiciones, competencias, música y actividades recreativas.</li>
+        <li><strong>🏆 Campeonatos Internos:</strong> Torneos organizados dentro de la escuela para que nuestros estudiantes demuestren sus habilidades y midan su progreso.</li>
+        <li><strong>🎭 Roller Night:</strong> Una noche especial de patinaje con temáticas, luces y música en vivo, ideal para disfrutar con amigos y familia.</li>
+        <li><strong>📚 Workshops y Clínicas:</strong> Capacitaciones con patinadores profesionales que enseñan técnicas avanzadas y brindan consejos exclusivos.</li>
+        <li><strong>🚀 Viajes y Excursiones:</strong> Organizamos salidas a pistas de patinaje, parques y competencias fuera de la ciudad para enriquecer la experiencia de nuestros estudiantes.</li>
+        <li><strong>🎅 Patinata Navideña:</strong> Un evento especial en diciembre donde recorremos la ciudad patinando con luces, disfraces y espíritu festivo.</li>
+    </ul>
+    <p>Estos eventos no solo fortalecen el sentido de comunidad en RollerSpeed, sino que también brindan a nuestros alumnos oportunidades únicas para aprender, compartir y disfrutar del patinaje en todas sus formas.</p>
+    <a th:href="@{/home}" class="btn btn-primary mt-3">Volver a Inicio</a>
+</div>
+</body>
+</html>

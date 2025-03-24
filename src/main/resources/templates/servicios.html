@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Servicios - RollerSpeed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>🛹 Servicios</h1>
+    <p>En RollerSpeed, ofrecemos una amplia variedad de programas y entrenamientos diseñados para todas las edades y niveles de experiencia:</p>
+    <ul class="list-unstyled">
+        <li><strong>✅ Clases de Iniciación al Patinaje:</strong> Para aquellos que desean aprender desde cero, enfocándonos en la postura, equilibrio y movimientos básicos.</li>
+        <li><strong>✅ Patinaje de Velocidad:</strong> Entrenamientos especializados para mejorar la técnica, resistencia y rendimiento en competencias de velocidad.</li>
+        <li><strong>✅ Patinaje Artístico:</strong> Clases enfocadas en la expresión, coreografía y dominio técnico para quienes buscan el patinaje como una forma de arte.</li>
+        <li><strong>✅ Patinaje Extremo y Urbano:</strong> Técnicas avanzadas para patinadores que quieren dominar saltos, trucos y maniobras en skateparks o entornos urbanos.</li>
+        <li><strong>✅ Entrenamiento Personalizado:</strong> Clases privadas diseñadas según los objetivos individuales del patinador.</li>
+        <li><strong>✅ Programas para Niños y Adultos:</strong> Adaptamos nuestros cursos a diferentes edades, asegurando una enseñanza efectiva y entretenida.</li>
+        <li><strong>✅ Preparación para Competencias:</strong> Coaching intensivo para patinadores que desean destacar en torneos y campeonatos locales e internacionales.</li>
+        <li><strong>✅ Alquiler de Equipos:</strong> Disponemos de patines y protecciones para quienes aún no tienen su propio equipo o desean probar antes de comprar.</li>
+    </ul>
+    <p>Nuestro equipo de instructores certificados garantiza una enseñanza segura y de alta calidad, adaptada a las necesidades de cada alumno.</p>
+    <a th:href="@{/home}" class="btn btn-primary mt-3">Volver a Inicio</a>
+</div>
+</body>
+</html>

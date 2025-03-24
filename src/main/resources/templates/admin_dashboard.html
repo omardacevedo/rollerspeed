@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>Admin Dashboard</h1>
+    <p>Bienvenido, Administrador!</p>
+    <div th:if="${token}">
+        <h3>Tu Token JWT:</h3>
+        <p th:text="${token}"></p>
+    </div>
+
+    <h2>Gestión</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><a th:href="@{/admin/alumnos}">Gestión de Alumnos</a></li>
+        <li class="list-group-item"><a th:href="@{/admin/instructores}">Gestión de Instructores</a></li>
+        <li class="list-group-item"><a th:href="@{/admin/reportes}">Generar Reportes</a></li>
+        <li class="list-group-item"><a th:href="@{/admin/info-institucional}">Gestionar Información Institucional</a></li>
+        <li class="list-group-item"><a th:href="@{/admin/horarios}">Programación de Horarios y Clases</a></li>
+    </ul>
+</div>
+</body>
+</html>

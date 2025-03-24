@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Misión - RollerSpeed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>🏆 Misión</h1>
+    <p>
+        En RollerSpeed, nuestra misión es proporcionar una formación de alta calidad en patinaje, dirigida tanto a niños como a adultos, fomentando el desarrollo físico, emocional y social de nuestros estudiantes. Nos comprometemos a brindar un entorno seguro, inclusivo y motivador, donde cada patinador pueda desarrollar su máximo potencial, ya sea en la disciplina recreativa, artística, de velocidad o extrema.
+    </p>
+    <p>
+        A través de entrenamientos estructurados y un equipo de instructores altamente capacitados, buscamos no solo mejorar las habilidades técnicas de nuestros alumnos, sino también inculcar valores fundamentales como la disciplina, la perseverancia, el trabajo en equipo y el respeto. Creemos firmemente que el patinaje es una herramienta poderosa para fortalecer la confianza, la coordinación y la salud en general.
+    </p>
+    <p>
+        Nuestro objetivo es que cada estudiante de RollerSpeed disfrute del patinaje como un estilo de vida, descubriendo en cada rueda una oportunidad para desafiarse a sí mismo, superar límites y alcanzar sus sueños.
+    </p>
+    <a th:href="@{/home}" class="btn btn-primary mt-3">Volver a Inicio</a>
+</div>
+</body>
+</html>

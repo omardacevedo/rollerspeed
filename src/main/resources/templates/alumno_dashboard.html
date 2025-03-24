@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumno Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>Alumno Dashboard</h1>
+    <p>Bienvenido, Alumno!</p>
+    <div th:if="${token}">
+        <h3>Tu Token JWT:</h3>
+        <p th:text="${token}"></p>
+    </div>
+
+    <h2>Opciones</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><a th:href="@{/alumno/perfil}">Editar Perfil</a></li>
+        <li class="list-group-item"><a th:href="@{/alumno/pagos}">Estado de Pagos</a></li>
+        <li class="list-group-item"><a th:href="@{/alumno/horarios}">Horarios</a></li>
+        <li class="list-group-item"><a th:href="@{/alumno/notificaciones}">Notificaciones</a></li>
+        <li class="list-group-item"><a th:href="@{/alumno/metodo-pago}">Seleccionar Método de Pago</a></li>
+    </ul>
+</div>
+</body>
+</html>
