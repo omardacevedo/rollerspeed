@@ -1,7 +1,6 @@
 package org.example.rollerspeed.controller;
 
 
-
 import org.example.rollerspeed.service.AlumnoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
