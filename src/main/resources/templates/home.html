@@ -1,38 +1,117 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Navbar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RollerSpeed - Inicio</title>
+
+    <!-- Bootstrap CSS desde CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <link href="/css/styles.css" rel="stylesheet">
 </head>
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-          RollerSpeed
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/mision}">Misión</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/vision}">Visión</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/valores}">Valores</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/servicios}">Servicios</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/eventos}">Eventos</a></li>
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <span class="navbar-text text-light">Bienvenido, <span th:text="${#authentication.name}"></span></span>
-                    <a class="nav-link" th:href="@{/logout}">Cerrar Sesión</a>
-                </li>
-                <li class="nav-item" sec:authorize="!isAuthenticated()">
-                    <a class="nav-link" th:href="@{/login}">Iniciar Sesión</a>
-                </li>
-            </ul>
+
+    <!-- Navbar -->
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto" href="/home">RollerSpeed</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/mision}">Misión</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/vision}">Visión</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/valores}">Valores</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/servicios}">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/eventos}">Eventos</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <span class="navbar-text text-light">Bienvenido, <span th:text="${#authentication.name}"></span></span>
+                        <a class="nav-link" th:href="@{/logout}">Cerrar Sesión</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/login}">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/registro}">Registrarse</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/logout}">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-4">Bienvenido a RollerSpeed</h1>
+            <p class="lead">¡Aprende, mejora y disfruta del patinaje!</p>
+            <a class="btn btn-light btn-lg" href="/servicios" role="button">Descubre nuestros servicios</a>
         </div>
     </div>
-</nav>
+
+    
+
+    <!-- Features Section -->
+    <div class="container py-5">
+        <div class="row justify-content-center text-center">
+
+            <div class="col-md-4 mb-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="/images/clases.jpg" class="card-img-top" style="height: 400px; object-fit: cover;" alt="Clases de Patinaje">
+                    <div class="card-body">
+                        <h5 class="card-title">Clases de Patinaje</h5>
+                        <p class="card-text">Ofrecemos clases de patinaje para todos los niveles, desde principiantes hasta expertos.</p>
+                        <a href="/registro" class="btn btn-primary">Ir</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="/images/eventos.jpg" class="card-img-top "style="height: 400px; object-fit: cover;" alt="Eventos de Patinaje">
+                    <div class="card-body">
+                        <h5 class="card-title">Eventos Especiales</h5>
+                        <p class="card-text">Participa en nuestros eventos y competencias de patinaje, una experiencia única.</p>
+                        <a href="/eventos" class="btn btn-primary">Ir</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="/images/store.jpg" class="card-img-top" style="height: 400px; object-fit: cover;" alt="Tienda de Patinaje">
+                    <div class="card-body">
+                        <h5 class="card-title">Tienda de Patines</h5>
+                        <p class="card-text">Encuentra los mejores patines y accesorios en nuestra tienda oficial.</p>
+                        <a href="/servicios" class="btn btn-primary">Ir</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="bg-secondary text-white text-center py-5">
+        <div class="container">
+            <h2 class="display-4">¡Únete a nosotros hoy!</h2>
+            <p class="lead">No importa tu nivel, tenemos algo para ti.</p>
+            <a class="btn btn-light btn-lg" href="/registro" role="button">Inscríbete ahora</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2025 RollerSpeed. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Bootstrap JS para la funcionalidad del navbar colapsable -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @Controller
 @RequestMapping("/auth")
-
+@Tag(name = "Autenticación", description = "Endpoints relacionados con la autenticación y generación de tokens")
 public class AuthController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -22,6 +27,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Iniciar sesión", description = "Autentica a un usuario y redirige según su rol.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "302", description = "Redirige al dashboard correspondiente"),
+        @ApiResponse(responseCode = "400", description = "Credenciales inválidas, retorna a la página de login")
+    })
+    
     public String login(@ModelAttribute LoginRequest loginRequest, Model model) {
         String role = userService.validateUser(loginRequest.getUsername(), loginRequest.getPassword());
         if (role != null) {

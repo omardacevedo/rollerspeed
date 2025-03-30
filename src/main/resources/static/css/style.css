@@ -1,0 +1,51 @@
+/* src/main/resources/static/css/styles.css */
+.navbar-custom {
+    background-color: #004aad !important; /* Azul vibrante */
+    padding: 15px 20px; /* Espaciado superior e inferior */
+}
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white !important;
+}
+.nav-link {
+    font-size: 1.1rem;
+    color: white !important;
+    transition: color 0.3s ease-in-out;
+}
+.nav-link:hover {
+    color: #ffdd57 !important; /* Amarillo al pasar el mouse */
+}
+.navbar-text {
+    font-size: 1rem;
+    margin-right: 10px;
+    color: white;
+}
+/* Botón hamburguesa  */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+.navbar-toggler-icon {
+    background-color: white !important;
+}
+
+
+/* Estilos personalizados  home */
+.hero {
+    background-image: url('/images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.card {
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+footer {
+    margin-top: 50px;
+}
