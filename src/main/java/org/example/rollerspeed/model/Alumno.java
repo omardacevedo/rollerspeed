@@ -28,6 +28,7 @@ public class Alumno {
     @Column(nullable = false)
     private String genero;
 
+
     @Column(nullable = false, unique = true)
     private String correo;
 

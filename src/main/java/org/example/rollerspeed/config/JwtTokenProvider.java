@@ -1,50 +1,40 @@
 package org.example.rollerspeed.config;
 
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.rollerspeed.service.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
-    private final String secret = "mySecretKey"; // En producción, usa una clave segura
-    private final long validityInMilliseconds = 3600000; // 1 hora
-    private final UserService userService;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    public JwtTokenProvider(UserService userService) {
-        this.userService = userService;
+    @Value("${jwt.expiration}")
+    private int jwtExpirationInMs;
+
+    public JwtTokenProvider() {
     }
 
-    public String createToken(String username) {
-        String role = userService.getUserRole(username);
+    public String createToken(String username, String role) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+
+        Key key = new SecretKeySpec(Base64.getDecoder().decode(jwtSecret), SignatureAlgorithm.HS512.getJcaName());
+
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role) // Añadimos el rol al token
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + validityInMilliseconds))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .claim("role", role)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-    }
-
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public String getRole(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("role", String.class);
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -53,5 +43,27 @@ public class JwtTokenProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Key key = new SecretKeySpec(Base64.getDecoder().decode(jwtSecret), SignatureAlgorithm.HS512.getJcaName());
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public String getUsername(String token) {
+        Key key = new SecretKeySpec(Base64.getDecoder().decode(jwtSecret), SignatureAlgorithm.HS512.getJcaName());
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.getSubject();
+    }
+
+    public String getRole(String token) {
+        Key key = new SecretKeySpec(Base64.getDecoder().decode(jwtSecret), SignatureAlgorithm.HS512.getJcaName());
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("role", String.class);
     }
 }
