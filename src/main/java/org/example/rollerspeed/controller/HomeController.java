@@ -1,19 +1,20 @@
 package org.example.rollerspeed.controller;
 
-import org.springframework.security.core.Authentication;
 import org.example.rollerspeed.dto.LoginRequest;
 import org.example.rollerspeed.model.Alumno;
 import org.example.rollerspeed.repositiry.AlumnoRepository;
 import org.example.rollerspeed.service.AlumnoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -25,30 +26,35 @@ public class HomeController {
 
     private final AlumnoRepository alumnoRepository;
     private final AlumnoService alumnoService;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public HomeController(AlumnoRepository alumnoRepository,AlumnoService alumnoService) {
+    @Autowired
+    public HomeController(AlumnoRepository alumnoRepository,
+                          AlumnoService alumnoService,
+                          UserDetailsService userDetailsService,
+                          PasswordEncoder passwordEncoder) {
         this.alumnoRepository = alumnoRepository;
         this.alumnoService = alumnoService;
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping({"/home"})
+    @GetMapping({"/", "/home"})
     @Operation(summary = "Página de inicio", description = "Redirige a la página de inicio si el usuario está autenticado, de lo contrario lo envía al login.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Página de inicio mostrada correctamente"),
-        @ApiResponse(responseCode = "302", description = "Redirige al login si el usuario no está autenticado")
+            @ApiResponse(responseCode = "200", description = "Página de inicio mostrada correctamente"),
+            @ApiResponse(responseCode = "302", description = "Redirige al login si el usuario no está autenticado")
     })
     public String home(Model model) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();  // Obtener el nombre de usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+            String username = authentication.getName();
             model.addAttribute("username", username);
-            return "home";  // Puedes devolver la vista de inicio
+            return "home";
         }
-        
-        return "redirect:/login";  // Si no está autenticado, redirigir al login
+        return "redirect:/home";
     }
-
 
     @GetMapping("/login")
     @Operation(summary = "Formulario de login", description = "Muestra el formulario de inicio de sesión.")
@@ -67,30 +73,37 @@ public class HomeController {
     }
 
     @PostMapping("/registro")
-    @Operation(summary = "Registrar alumno", description = "Procesa el formulario de registro y guarda el alumno en la base de datos.")
+    @Operation(summary = "Registrar alumno", description = "Registra un nuevo alumno y lo autentica automáticamente.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "302", description = "Redirige al login después del registro exitoso"),
-        @ApiResponse(responseCode = "400", description = "Muestra error si el correo ya está registrado")
+            @ApiResponse(responseCode = "302", description = "Redirige al dashboard correspondiente tras registro exitoso"),
+            @ApiResponse(responseCode = "200", description = "Vuelve al formulario si hay un error")
     })
     public String registrarAlumno(@ModelAttribute Alumno alumno, Model model) {
-        // Verificar si el correo electrónico ya existe
-        if (alumnoService.existsByCorreo(alumno.getCorreo())) {
-        // Si el correo ya está registrado, mostrar un mensaje de error
-        model.addAttribute("error", "El correo electrónico ya está registrado.");
-        return "registro"; // Volver al formulario de registro
+        if (alumno == null) {
+            model.addAttribute("error", "Error al registrar el alumno.");
+            return "registro";
+        } else {
+            try {
+                if (alumnoService.existsByCorreo(alumno.getCorreo())) {
+                    model.addAttribute("error", "El correo electrónico ya está registrado.");
+                    return "registro";
+                }
+                alumno.setPassword(passwordEncoder.encode(alumno.getPassword()));
+                alumno.setMatricula("MAT-" + System.currentTimeMillis());
+                alumno.setRole("ALUMNO");
+                alumnoRepository.save(alumno);
+                System.out.println("Alumno registrado: " + alumno.getCorreo());
+
+                var userDetails = alumnoService.loadUserByUsername(alumno.getCorreo());
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                return "redirect:/home";
+            } catch (Exception e) {
+                model.addAttribute("error", "Error al registrar el alumno.");
+                return "registro";
+            }
         }
-
-         // Encriptar la contraseña
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode(alumno.getPassword());
-        alumno.setPassword(encodedPassword); 
-
-        //Usar la contraseña inscrita por el usuario:
-        String username = alumno.getCorreo().split("@")[0];
-        alumno.setUsername(username); //Nombre de usuario basado en el correo 
-        alumno.setMatricula("MAT-" + System.currentTimeMillis());//asignar matricula
-        alumnoRepository.save(alumno);
-        return "redirect:/login";
     }
 
     @GetMapping("/mision")

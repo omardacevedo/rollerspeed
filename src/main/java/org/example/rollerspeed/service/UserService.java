@@ -4,60 +4,46 @@ import org.example.rollerspeed.model.Administrador;
 import org.example.rollerspeed.model.Alumno;
 import org.example.rollerspeed.model.Instructor;
 import org.example.rollerspeed.repositiry.AdministradorRepository;
-import org.example.rollerspeed.repositiry.AlumnoRepository;
 import org.example.rollerspeed.repositiry.InstructorRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.example.rollerspeed.repositiry.AlumnoRepository;
 
-import java.util.Collections;
+import java.util.Optional;
 
 @Service
-
-
 public class UserService {
 
-    private final AdministradorRepository adminRepository;
-    private final InstructorRepository instructorRepository;
     private final AlumnoRepository alumnoRepository;
-
-    public UserService(AdministradorRepository adminRepository, InstructorRepository instructorRepository, AlumnoRepository alumnoRepository) {
+    private final PasswordEncoder passwordEncoder;
+    private  final AdministradorRepository adminRepository;
+    private final InstructorRepository instructorRepository;
+    public UserService(AlumnoRepository alumnoRepository, PasswordEncoder passwordEncoder, AdministradorRepository adminRepository, InstructorRepository instructorRepository) {
+        this.alumnoRepository = alumnoRepository;
+        this.passwordEncoder = passwordEncoder;
         this.adminRepository = adminRepository;
         this.instructorRepository = instructorRepository;
-        this.alumnoRepository = alumnoRepository;
     }
 
+    public String validateUser(String correo, String password) {
+        System.out.println("Validando usuario por correo: " + correo);
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return adminRepository.findByUsername(username)
-                .map(admin -> new User(admin.getUsername(), admin.getPassword(),
-                        Collections.singletonList(new SimpleGrantedAuthority(admin.getRole()))))
-                .or(() -> instructorRepository.findByUsername(username)
-                        .map(instructor -> new User(instructor.getUsername(), instructor.getPassword(),
-                                Collections.singletonList(new SimpleGrantedAuthority(instructor.getRole())))))
-                .or(() -> alumnoRepository.findByUsername(username)
-                        .map(alumno -> new User(alumno.getUsername(), alumno.getPassword(),
-                                Collections.singletonList(new SimpleGrantedAuthority(alumno.getRole())))))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-    }
 
-    public String validateUser(String username, String password) {
-        if (adminRepository.findByUsername(username).map(a -> a.getPassword().equals(password)).orElse(false)) {
-            return "ROLE_ADMIN";
-        } else if (instructorRepository.findByUsername(username).map(i -> i.getPassword().equals(password)).orElse(false)) {
-            return "ROLE_INSTRUCTOR";
-        } else if (alumnoRepository.findByUsername(username).map(a -> a.getPassword().equals(password)).orElse(false)) {
-            return "ROLE_ALUMNO";
+        Optional<Alumno> alumno = alumnoRepository.findByCorreo(correo);
+        if (alumno.isPresent() && alumno.get().getPassword().equals(password)) {
+            return "ALUMNO";
         }
+
+        System.out.println("Usuario no encontrado por correo: " + correo);
         return null;
     }
 
-    public String getUserRole(String username) {
-        return adminRepository.findByUsername(username).map(Administrador::getRole)
-                .or(() -> instructorRepository.findByUsername(username).map(Instructor::getRole))
-                .or(() -> alumnoRepository.findByUsername(username).map(Alumno::getRole))
-                .orElse(null);
+
+
+    public boolean existsByCorreo(String correo) {
+        return alumnoRepository.findByCorreo(correo).isPresent();
     }
 }
